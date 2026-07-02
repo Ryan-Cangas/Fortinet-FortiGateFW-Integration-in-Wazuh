@@ -12,11 +12,11 @@ Created: July 1, 2026 6:57 PM
 
 ![image.png](/Images/image.png)
 
-1. Extract the qcow file inside the ZIP which will uploaded to my Proxmox Host.
+2. Extract the qcow file inside the ZIP which will uploaded to my Proxmox Host.
 
 ![image.png](/Images/image%201.png)
 
-1. Inside the terminal of the Downloads directory (where the qcow2 file is), SCP (Secure Copy Protocol) to transfer this qcow2 file into my Proxmox host in the specified path.
+3. Inside the terminal of the Downloads directory (where the qcow2 file is), SCP (Secure Copy Protocol) to transfer this qcow2 file into my Proxmox host in the specified path.
 
 ```bash
 PS C:\Users\user> scp fortios.qcow2 user@xxx.xxx.x.xxx:/var/lib/vz/template/iso/
@@ -25,7 +25,7 @@ fortios.qcow2                                                                   
 PS C:\Users\user>
 ```
 
-1. Create an empty VM shell (that matches Fortinet’s evaluation limits so licensing has no errors).
+4. Create an empty VM shell (that matches Fortinet’s evaluation limits so licensing has no errors).
 
 ```bash
 user@pve-server:~# qm create 200 --name FortiGate-Firewall --memory 2048 --cores 1 --cpu host --net0 virtio,bridge=vmbr0
@@ -35,7 +35,7 @@ After this, it can be confirmed in the Web UI, the VM was created
 
 ![image.png](/Images/image%202.png)
 
-1. Import the disk into the active storage pool. This command will convert the qcow2 file into a bootable virtual disk that will be assigned to the new VM that was created.
+5. Import the disk into the active storage pool. This command will convert the qcow2 file into a bootable virtual disk that will be assigned to the new VM that was created.
 
 ```bash
 user@pve-server:~# qm importdisk 200 /var/lib/vz/template/iso/fortios.qcow2 local-lvm
@@ -105,14 +105,14 @@ transferred 2.0 GiB of 2.0 GiB (100.00%)
 unused0: successfully imported disk 'local-lvm:vm-200-disk-0'
 ```
 
-1. Modify the VM virtual storage controller to virtio-scsi-pci, so it transfers data faster to the SSD, and attach the imported storage volume as primary hard drive on virtual slot scsi0.
+6. Modify the VM virtual storage controller to virtio-scsi-pci, so it transfers data faster to the SSD, and attach the imported storage volume as primary hard drive on virtual slot scsi0.
 
 ```bash
 user@pve-server:~# qm set 200 --scsihw virtio-scsi-pci --scsi0 local-lvm:vm-200-disk-0
 update VM 200: -scsi0 local-lvm:vm-200-disk-0 -scsihw virtio-scsi-pci
 ```
 
-1. Change the boot order, this is a must so it does not look for a bootable drive. We have already setup the boot, so it will look for it on scsi0 immediately when powered on.
+7. Change the boot order, this is a must so it does not look for a bootable drive. We have already setup the boot, so it will look for it on scsi0 immediately when powered on.
 
 ```bash
 user@pve-server:~# qm set 200 --boot order=scsi0
@@ -125,11 +125,11 @@ update VM 200: -boot order=scsi0
 
 ![image.png](/Images/image%203.png)
 
-1. Edit port 1 interface, so I can SSH into the VM; this makes it easier to edit settings and copy paste scripts into the shell.
+2. Edit port 1 interface, so I can SSH into the VM; this makes it easier to edit settings and copy paste scripts into the shell.
 
 ![image.png](/Images/image%204.png)
 
-1. I will make the IP address of this VM static, because I don’t want to setup DHCP Reservation on the home router settings. As per the router, the assigned IP for this VM is .xxx.
+3. I will make the IP address of this VM static, because I don’t want to setup DHCP Reservation on the home router settings. As per the router, the assigned IP for this VM is .xxx.
 
 ```powershell
 PS C:\Users\user> ssh user@xxx.xxx.x.xxx
@@ -151,7 +151,7 @@ Are you sure you want to continue? (y/n)y
 FortiGate-VM64-KVM (interface) # end //compile and write
 ```
 
-1. Setup firewall to have default route to exit the local subnet. This default static route pointing out of port1 to home network gateway router.
+4. Setup firewall to have default route to exit the local subnet. This default static route pointing out of port1 to home network gateway router.
 
 ```bash
 config router static
@@ -163,7 +163,7 @@ config router static
 end
 ```
 
-1. To solve the dns resolve errors during account validation, I will point the the FW internal DNS settings to public Google DNS so it can find the Fortinet licensing network.
+5. To solve the dns resolve errors during account validation, I will point the the FW internal DNS settings to public Google DNS so it can find the Fortinet licensing network.
 
 ```bash
 config system dns
@@ -172,7 +172,7 @@ config system dns
 end
 ```
 
-1. Setup the syslog setting so fortigate kernel instantly connects into UDP channel and sends logs to my Ubuntu network, into the Wazuh docker container.
+6. Setup the syslog setting so fortigate kernel instantly connects into UDP channel and sends logs to my Ubuntu network, into the Wazuh docker container.
 
 ```powershell
 PS C:\Users\user> ssh user@xxx.xxx.x.xxx
@@ -194,7 +194,7 @@ FortiGate-VM64-KVM (setting) # end
 FortiGate-VM64-KVM #
 ```
 
-1. Enable the syslog setting
+7. Enable the syslog setting
 
 ```bash
 config log setting
@@ -208,11 +208,11 @@ end
 
 ![image.png](/Images/image%205.png)
 
-1. It will verify from the licensing network of Fortinet and will reboot the FortiGate VM
+2. It will verify from the licensing network of Fortinet and will reboot the FortiGate VM
 
 ![Screenshot 2026-07-02 105453.png](/Images/Screenshot_2026-07-02_105453.png)
 
-1. After activating the free license (which is permanent), you can now setup preferred FortiGate configurations, these are mine.
+3. After activating the free license (which is permanent), you can now setup preferred FortiGate configurations, these are mine.
 
 ![Screenshot 2026-07-02 105736.png](/Images/Screenshot_2026-07-02_105736.png)
 
@@ -220,7 +220,7 @@ end
 
 ![Screenshot 2026-07-02 112230.png](/Images/Screenshot_2026-07-02_112230.png)
 
-1. You change the Hostname of the firewall through the CLI or the Web UI, I used the CLI as it’s my preference.
+4. You change the Hostname of the firewall through the CLI or the Web UI, I used the CLI as it’s my preference.
 
 ```bash
 config system global
@@ -240,16 +240,16 @@ end
       - "5140:514/udp"
 ```
 
-1. Spin the Docker Compose again using docker compose up -d to deploy stack changes.
-2. To edit the ossec.conf file of Wazuh, it is easier to do this by using the Web UI. Go to Settings > Server Management > Configuration. Here you can click edit configuration to edit the ossec.conf file easily.
+2. Spin the Docker Compose again using docker compose up -d to deploy stack changes.
+3. To edit the ossec.conf file of Wazuh, it is easier to do this by using the Web UI. Go to Settings > Server Management > Configuration. Here you can click edit configuration to edit the ossec.conf file easily.
 
 ![image.png](/Images/image%206.png)
 
-1. Add the remote listener for docker to listen to the syslogs received from Fortinet FW. Save the new configuration and then restart the manager. In my case the IP is 0.0.0.0, this is ONLY for the homelab, because I had issues with IP setup, so I set it to listen to all network interfaces.
+4. Add the remote listener for docker to listen to the syslogs received from Fortinet FW. Save the new configuration and then restart the manager. In my case the IP is 0.0.0.0, this is ONLY for the homelab, because I had issues with IP setup, so I set it to listen to all network interfaces.
 
 ![image.png](/Images/image%207.png)
 
-1. I used a diagnose log test in the Fortinet KVM for simulating logs because I don’t have access to the Fortinet Web UI (White screen issue; could be related to licensing or SSL).
+5. I used a diagnose log test in the Fortinet KVM for simulating logs because I don’t have access to the Fortinet Web UI (White screen issue; could be related to licensing or SSL).
 
 ```bash
 FortiGate-VM64-KVM # diagnose log test
@@ -300,7 +300,7 @@ generating authentication event messages
 1: generating a CASB monitor log with level - information
 ```
 
-1. These logs can now be found in the Wazuh alerts index pattern under the decoder.name = fortigate-firewall-v6
+6. These logs can now be found in the Wazuh alerts index pattern under the decoder.name = fortigate-firewall-v6
 
 ![image.png](/Images/image%208.png)
 
