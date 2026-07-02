@@ -1,4 +1,4 @@
-# 🛡️ FortiGate Next-Generation Firewall Integration with Wazuh SIEM
+# 🛡️ FortiGate Firewall Integration with Wazuh SIEM
 
 ## 📖 [View My Detailed Implementation Notes Diary](/FortiGate%20Firewall%20Integration%20in%20Wazuh.md)
 
