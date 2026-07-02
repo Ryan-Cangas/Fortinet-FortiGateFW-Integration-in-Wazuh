@@ -304,6 +304,24 @@ generating authentication event messages
 
 ![image.png](/Images/image%208.png)
 
+# Creating Dashboard
+
+1. Go to discover and select Dashboards, create new and then add the filter for only fortigate.
+
+![image.png](/Images/Screenshot%202026-07-02%20123859.png)
+
+2. Pick any type of visualization, I chose area and then configure the bucket by clicking add bucket. Confirm your fortigate logs in discover to see what specific fields it is using so that you can put it in the field of the dashboard.
+
+![image.png](/Images/Screenshot%202026-07-02%20124557.png)
+
+3. Save your visualization with short descriptive title and it will be added as a single panel to the overall dashboard where you can add more panels.
+
+![image.png](/Images/Screenshot%202026-07-02%20124836.png)
+
+4. Here’s a cluster of panels that I created to showcase the overall Dashboard for admins and SOC to use.
+
+![image.png](/Images/Screenshot%202026-07-02%20125625.png)
+
 # System Architecture
 
 #### Minimum Hardware Requirements (as per Wazuh documentation):
